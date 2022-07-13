@@ -1,0 +1,14 @@
+[gd_resource type="Environment" load_steps=3 format=2]
+
+[sub_resource type="ViewportTexture" id=19]
+viewport_path = NodePath("Sky")
+
+[sub_resource type="PanoramaSky" id=18]
+resource_local_to_scene = true
+panorama = SubResource( 19 )
+
+[resource]
+background_mode = 2
+background_sky = SubResource( 18 )
+tonemap_mode = 4
+glow_enabled = true

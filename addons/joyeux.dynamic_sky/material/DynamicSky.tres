@@ -1,0 +1,28 @@
+[gd_resource type="ShaderMaterial" load_steps=5 format=2]
+
+[ext_resource path="res://addons/joyeux.dynamic_sky/src/shaders/Sky.shader" type="Shader" id=1]
+[ext_resource path="res://assets/placeholders/quarry_04_8k.exr" type="Texture" id=2]
+
+[sub_resource type="OpenSimplexNoise" id=15]
+octaves = 9
+period = 0.1
+
+[sub_resource type="NoiseTexture" id=16]
+width = 300
+height = 300
+noise = SubResource( 15 )
+
+[resource]
+shader = ExtResource( 1 )
+shader_param/COVERAGE = 0.516
+shader_param/THICKNESS = 12.236
+shader_param/ABSORPTION = 10.0
+shader_param/IMAGE_AMOUNT = 0.0
+shader_param/WIND_SPEED = -0.152
+shader_param/STEPS = 25
+shader_param/SunColor = Color( 0, 0, 0, 1 )
+shader_param/SkyDomeColor = Color( 0.013225, 0.0117, 0.03, 1 )
+shader_param/SkyHorizonColor = Color( 0.00389862, 0.00448766, 0.0356445, 1 )
+shader_param/direction = Vector3( 57.2958, 0, 0 )
+shader_param/iChannel0 = SubResource( 16 )
+shader_param/background = ExtResource( 2 )

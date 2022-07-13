@@ -1,0 +1,86 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://addons/joyeux.dynamic_sky/material/DynamicSky.tres" type="Material" id=1]
+[ext_resource path="res://addons/SIsilicon.vfx.godrays/GodRays.gd" type="Script" id=2]
+[ext_resource path="res://addons/joyeux.dynamic_sky/src/DynamicDayNight.gd" type="Script" id=3]
+
+[sub_resource type="ViewportTexture" id=29]
+flags = 4
+viewport_path = NodePath("Sky")
+
+[sub_resource type="PanoramaSky" id=18]
+resource_local_to_scene = true
+radiance_size = 3
+panorama = SubResource( 29 )
+
+[sub_resource type="Environment" id=19]
+background_mode = 2
+background_sky = SubResource( 18 )
+tonemap_mode = 4
+ssao_enabled = true
+ssao_quality = 0
+glow_enabled = true
+
+[sub_resource type="Gradient" id=21]
+offsets = PoolRealArray( 0, 0.0334347, 0.0851064, 0.145897, 0.212766, 0.273556, 0.352584, 0.416413, 0.50152, 0.550152, 0.601824, 0.662614, 0.708207, 0.778116, 0.844985, 0.930091, 1 )
+colors = PoolColorArray( 0.013225, 0.0117, 0.03, 1, 0.0581819, 0.0545189, 0.0562856, 1, 0.127661, 0.120694, 0.0969089, 1, 0.204965, 0.169278, 0.108762, 1, 0.29, 0.22272, 0.1218, 1, 0.283778, 0.264306, 0.212041, 1, 0.27569, 0.318367, 0.329353, 1, 0.269158, 0.362032, 0.424106, 1, 0.260448, 0.420251, 0.550443, 1, 0.283819, 0.459739, 0.594302, 1, 0.30865, 0.501695, 0.640902, 1, 0.337864, 0.551054, 0.695727, 1, 0.359774, 0.588074, 0.736845, 1, 0.39337, 0.644838, 0.799892, 1, 0.425505, 0.699133, 0.860199, 1, 0.466404, 0.768237, 0.936952, 1, 0.5, 0.825, 1, 1 )
+
+[sub_resource type="Gradient" id=23]
+offsets = PoolRealArray( 0, 0.0455927, 0.0881459, 0.118541, 0.161094, 0.224924, 0.300912, 0.370821, 0.43465, 0.50152, 0.547112, 0.604863, 0.668693, 0.717325, 0.768997, 0.841945, 0.911854, 1 )
+colors = PoolColorArray( 0.00389862, 0.00448766, 0.0356445, 1, 0.077184, 0.00508661, 0.0194667, 1, 0.105102, 0.00531479, 0.0133037, 1, 0.14, 0.0056, 0.0056, 1, 0.404, 0.227004, 0.15056, 1, 0.8, 0.559109, 0.368, 1, 0.66975, 0.549589, 0.45727, 1, 0.54992, 0.54083, 0.539398, 1, 0.44051, 0.532833, 0.614384, 1, 0.32589, 0.524455, 0.692941, 1, 0.318949, 0.513453, 0.675294, 1, 0.310157, 0.499517, 0.652941, 1, 0.300439, 0.484114, 0.628235, 1, 0.293035, 0.472379, 0.609412, 1, 0.285169, 0.45991, 0.589412, 1, 0.274063, 0.442307, 0.561176, 1, 0.26342, 0.425437, 0.534118, 1, 0.25, 0.404167, 0.5, 1 )
+
+[sub_resource type="Gradient" id=25]
+offsets = PoolRealArray( 0, 0.0607903, 0.121581, 0.170213, 0.246201, 0.297872, 0.382979, 0.465046, 0.537994, 0.583587, 0.635258, 0.693009, 0.741641, 0.81459, 0.884498, 0.948328, 1 )
+colors = PoolColorArray( 0, 0, 0, 1, 0.135, 0.0135, 0.0135, 1, 0.27, 0.027, 0.027, 1, 0.293806, 0.104412, 0.0615467, 1, 0.331003, 0.225369, 0.115526, 1, 0.356298, 0.277583, 0.152232, 1, 0.397958, 0.363582, 0.212689, 1, 0.438131, 0.353472, 0.270986, 1, 0.473841, 0.344486, 0.322806, 1, 0.496159, 0.379247, 0.355194, 1, 0.521453, 0.418643, 0.3919, 1, 0.549723, 0.462674, 0.432924, 1, 0.573529, 0.499753, 0.467471, 1, 0.607751, 0.553053, 0.517132, 1, 0.64346, 0.608671, 0.568952, 1, 0.674706, 0.657337, 0.614294, 1, 0.7, 0.696733, 0.651, 1 )
+
+[sub_resource type="Gradient" id=27]
+offsets = PoolRealArray( 0, 0.0729483, 0.118541, 0.191489, 0.577508, 0.683891, 0.729483, 0.841945, 0.878419, 0.942249, 1 )
+colors = PoolColorArray( 1, 1, 1, 1, 0.836901, 0.836901, 0.836901, 1, 0.734964, 0.734964, 0.734964, 1, 0.388831, 0.388831, 0.388831, 1, 0.0951429, 0.0951429, 0.0951429, 1, 0.0870737, 0.0870737, 0.0870737, 1, 0.0781977, 0.0781977, 0.0781977, 1, 0.061928, 0.061928, 0.061928, 1, 0.0566514, 0.0566514, 0.0566514, 1, 0.0474172, 0.0474172, 0.0474172, 1, 0.0390625, 0.0390625, 0.0390625, 1 )
+
+[sub_resource type="ImageTexture" id=2]
+size = Vector2( 2560, 1440 )
+
+[sub_resource type="ViewportTexture" id=28]
+flags = 4
+viewport_path = NodePath("Sky")
+
+[node name="DynamicDayNight" type="WorldEnvironment"]
+environment = SubResource( 19 )
+script = ExtResource( 3 )
+sky_dome_color = Color( 0.013225, 0.0117, 0.03, 1 )
+sky_horizon_color = Color( 0.00389862, 0.00448766, 0.0356445, 1 )
+skygradient = SubResource( 21 )
+horizongradient = SubResource( 23 )
+sungradient = SubResource( 25 )
+absorbtiongradient = SubResource( 27 )
+wind_speed = -0.152
+sun_positon = Vector3( 57.2958, 0, 0 )
+time_update_tick = 15.0
+step_amount_per_tick = 1
+
+[node name="Sky" type="Viewport" parent="."]
+size = Vector2( 2560, 1440 )
+sharpen_intensity = 1.0
+render_target_update_mode = 3
+
+[node name="Sprite" type="TextureRect" parent="Sky"]
+material = ExtResource( 1 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 1280.0
+margin_bottom = 720.0
+texture = SubResource( 2 )
+
+[node name="DirectionalLight" type="DirectionalLight" parent="."]
+transform = Transform( -4.37114e-08, 0, -0.999999, 0, 0.999999, 0, 1, 0, -4.37114e-08, 0, 0, 0 )
+light_color = Color( 0, 0, 0, 1 )
+light_bake_mode = 0
+shadow_enabled = true
+directional_shadow_blend_splits = true
+directional_shadow_depth_range = 1
+
+[node name="GodRays" type="Spatial" parent="DirectionalLight"]
+script = ExtResource( 2 )
+exposure = 1.195
+light_size = 0.779
+cloud_texture = SubResource( 28 )
