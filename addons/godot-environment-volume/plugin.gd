@@ -4,7 +4,7 @@ tool
 extends EditorPlugin
 
 
-const EnvironmentVolumeGizmoPlugin = preload("editor/environment_volume_gizmo_plugin.gd");
+var EnvironmentVolumeGizmoPlugin = load("editor/environment_volume_gizmo_plugin.gd")
 
 
 var undo_redo: UndoRedo;

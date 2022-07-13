@@ -154,7 +154,7 @@ func vector_from_time(hour, day, month) -> Vector3:
 	var offset = (sin(month/12 * 2 * PI) + cos(day/30 * PI))
 	var xy = (hour / 24) * 2 * PI 
 	var z = clamp(rad2deg(offset), -60, 60) 
-	var vector = Vector3(rad2deg(cos(xy)), rad2deg(sin(xy)), 0)
+	var vector = Vector3(rad2deg(cos(xy)), rad2deg(sin(xy)), z)
 	return vector
 
 func update_day_night(position : Vector3) -> void:
