@@ -14,11 +14,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/github-integration/scripts/ContributorClass.gd"
 }, {
-"base": "Spatial",
-"class": "EnvironmentVolume",
-"language": "GDScript",
-"path": "res://addons/godot-environment-volume/environment_volume.gd"
-}, {
 "base": "PanelContainer",
 "class": "GistItem",
 "language": "GDScript",
@@ -36,7 +31,6 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "ContributorClass": "",
-"EnvironmentVolume": "res://addons/godot-environment-volume/environment_volume.svg",
 "GistItem": "",
 "InvitationItem": "",
 "RepositoryItem": ""
@@ -57,7 +51,7 @@ RestHandler="*res://addons/github-integration/scenes/RestHandler.tscn"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/SIsilicon.vfx.godrays/plugin.cfg", "res://addons/github-integration/plugin.cfg", "res://addons/godot-environment-volume/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/SIsilicon.vfx.godrays/plugin.cfg", "res://addons/github-integration/plugin.cfg" )
 
 [gui]
 

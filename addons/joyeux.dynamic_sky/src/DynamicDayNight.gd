@@ -3,7 +3,7 @@ extends WorldEnvironment
 
 onready var image : TextureRect = $Sky/Sprite
 onready var sky : Viewport = $Sky
-onready var sun : Spatial = $DirectionalLight
+onready var sun : DirectionalLight = $DirectionalLight
 export(Color) var sky_dome_color = Color(0.5, 0.5, 0.5, 1) setget set_dome_color, get_dome_color
 export(Color) var sky_horizon_color = Color(0.5, 0.5, 0.5, 1) setget set_horizon_color, get_horizon_color
 export(Gradient) var skygradient = null
@@ -19,6 +19,22 @@ export(float) var step_amount_per_tick = 1
 var hour : float = 0.0 
 var day : float = 1.0
 var month : float = 11.0
+
+export(float) var precipitation_deviation : float = 1.0
+#Edit values in this array for rain probablility
+var precipitation_probability = [
+	5, #January
+	8, #February
+	12, #March
+	5, #April
+	3, #June
+	20, #July
+	10, #August
+	23, #September
+	3, #October
+	1, #December 
+]
+
 
 func set_serialized_time(serialized_time) -> void:
 	hour = 110000
@@ -46,14 +62,8 @@ func get_sun_position() -> Vector3:
 	return sun_positon
 
 func _ready() -> void:
+	yield(get_tree().create_timer(0.1), "timeout")
 	retry_draw()
-	if Engine.has_singleton("EnvironmentBlender"):
-		if Engine.get_singleton("EnvironmentBlender").has_methd("register_main_env"):
-			Engine.get_singleton("EnvironmentBlender").register_main_env(self)
-		else:
-			printerr("EnvironmentBlender is missing register_main_env method, don't use the vanilla addon")
-	else:
-		printerr("EnvironmentBlender not found")
 	get_tree().create_timer(time_update_tick).connect("timeout", self, "next_time_tick")
 
 func retry_draw() -> void:
@@ -142,10 +152,6 @@ func next_time_tick() -> void:
 	if month > 12:
 		month = 1
 	var new_time = vector_from_time(hour, day, month)
-	#if new_time.y > -10:
-	#	set_sun_position(new_time)
-	#else:
-		#new_time.y = -90
 	set_sun_position(new_time)
 	update_day_night(new_time)
 	get_tree().create_timer(time_update_tick).connect("timeout", self, "next_time_tick")
@@ -178,3 +184,4 @@ func update_day_night(position : Vector3) -> void:
 	set_horizon_color(horizongradient.get_color(horizon_idx))
 	set_sun_color(sungradient.get_color(sun_idx))
 	set_absorption(absorbtiongradient.get_color(absorbtion_idx).r*10)
+
