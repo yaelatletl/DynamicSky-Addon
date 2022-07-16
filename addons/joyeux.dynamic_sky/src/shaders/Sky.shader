@@ -3,17 +3,19 @@ shader_type canvas_item;
 // USING https://www.shadertoy.com/view/XtBXDw (base on it)
 
 uniform sampler2D iChannel0;
-uniform sampler2D background;
+uniform sampler2D night_sky;
 uniform float COVERAGE :hint_range(0,1); //0.5
 uniform float THICKNESS :hint_range(0,100); //25.
 uniform float ABSORPTION :hint_range(0,10); //1.030725
 uniform float IMAGE_AMOUNT :hint_range(0,1); //1.030725
 uniform float WIND_SPEED :hint_range(0.0, 1.0, 0.1);
 uniform int STEPS :hint_range(0,100); //25
+
 uniform vec4 SunColor : hint_color;
 uniform vec4 SkyDomeColor : hint_color;
 uniform vec4 SkyHorizonColor : hint_color;
 uniform vec3 direction;
+
 float noise( in vec3 x )
 {
     x*=0.01;
@@ -174,7 +176,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord, in vec2 iResolution)
 
     panorama_uv(fragCoord,ro,rd,iResolution);
     vec2 uv = fragCoord/iResolution;
-	vec3 image = texture(background, vec2(uv.x, 1.0-uv.y)).rgb;
+	vec3 image = texture(night_sky, vec2(uv.x, 1.0-uv.y)).rgb;
     vec3 sky = mix(render_sky_color(rd), image, IMAGE_AMOUNT);
     vec4 cld = vec4(0.);
 	float skyPow = dot(rd, vec3(0.0, -1.0, 0.0));

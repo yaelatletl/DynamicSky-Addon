@@ -1,0 +1,29 @@
+[gd_resource type="ShaderMaterial" load_steps=4 format=2]
+
+[ext_resource path="res://addons/Sky/images/noise.png" type="Texture" id=1]
+[ext_resource path="res://addons/Sky/images/milkywaypan_brunier_2048 2.png" type="Texture" id=2]
+[ext_resource path="res://addons/Sky/scripts/sky_clouds.shader" type="Shader" id=3]
+
+[resource]
+shader = ExtResource( 3 )
+shader_param/COVERAGE = 0.406
+shader_param/THICKNESS = 1.667
+shader_param/ABSORPTION = 0.0474172
+shader_param/WIND_SPEED = 7.912
+shader_param/STEPS = 25
+shader_param/WIND_VEC = Vector3( 0.01, 0, 0.01 )
+shader_param/EXPOSURE = 1.0
+shader_param/saturate = 0.3
+shader_param/earth_radius_km = 6371.0
+shader_param/atmo_radius_km = 6471.0
+shader_param/cam_height_m = 1.8
+shader_param/direction = Vector3( -30.5383, 48.479, 0 )
+shader_param/sun_intensity = 20.0
+shader_param/rayleigh_coeff = Vector3( 5.5, 13, 22.4 )
+shader_param/mie_coeff = 21.0
+shader_param/rayleigh_scale = 800.0
+shader_param/mie_scale = 120.0
+shader_param/mie_scatter_dir = 0.758
+shader_param/rotate_night_sky = null
+shader_param/iChannel0 = ExtResource( 1 )
+shader_param/night_sky = ExtResource( 2 )

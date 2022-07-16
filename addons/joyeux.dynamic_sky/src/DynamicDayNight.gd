@@ -4,6 +4,7 @@ extends WorldEnvironment
 onready var image : TextureRect = $Sky/Sprite
 onready var sky : Viewport = $Sky
 onready var sun : DirectionalLight = $DirectionalLight
+export(bool) var cheap_shader = true
 export(Color) var sky_dome_color = Color(0.5, 0.5, 0.5, 1) setget set_dome_color, get_dome_color
 export(Color) var sky_horizon_color = Color(0.5, 0.5, 0.5, 1) setget set_horizon_color, get_horizon_color
 export(Gradient) var skygradient = null
@@ -45,12 +46,15 @@ func set_serialized_time(serialized_time) -> void:
 	month &= serialized_time
 
 func set_sun_position(pos : Vector3) -> void:
+	if not cheap_shader:
+		pos = Vector3(pos.x, pos.y, 0)
+		#pos = Vector3(deg2rad(pos.x), deg2rad(pos.y), 0)
 	sun_positon = pos
 	if not is_instance_valid(sun) or not is_inside_tree():
 		return
 	image.material.set("shader_param/direction",pos)
 	sun.look_at(Vector3(pos.x, -pos.y, pos.z), Vector3.UP)
-	if sun.rotation_degrees.x > 0:
+	if sun.rotation_degrees.x > -10:
 		sun.visible = false
 	else:
 		sun.visible = true
@@ -183,5 +187,8 @@ func update_day_night(position : Vector3) -> void:
 	set_dome_color(skygradient.get_color(dome_idx))
 	set_horizon_color(horizongradient.get_color(horizon_idx))
 	set_sun_color(sungradient.get_color(sun_idx))
-	set_absorption(absorbtiongradient.get_color(absorbtion_idx).r*10)
+	if not cheap_shader:
+		set_absorption(absorbtiongradient.get_color(absorbtion_idx).r)
+	else:
+		set_absorption(absorbtiongradient.get_color(absorbtion_idx).r*10)
 

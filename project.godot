@@ -39,7 +39,7 @@ _global_script_class_icons={
 [application]
 
 config/name="DynamicSky Addon"
-run/main_scene="res://addons/joyeux.dynamic_sky/DynamicDayNight.tscn"
+run/main_scene="res://addons/joyeux.dynamic_sky/DynamicDayNight_Cheap.tscn"
 config/icon="res://icon.png"
 
 [autoload]
