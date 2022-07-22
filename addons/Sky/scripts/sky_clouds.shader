@@ -10,8 +10,8 @@ uniform float COVERAGE :hint_range(0,1); //0.5
 uniform float THICKNESS :hint_range(0,100); //25.
 uniform float ABSORPTION :hint_range(0,10); //1.030725
 uniform float WIND_SPEED : hint_range(0,3); // 1.3 for now
-uniform int STEPS :hint_range(0,100); //25
 uniform vec3 WIND_VEC = vec3(0.01, 0.00, 0.01); // :hint_range(0,100); //25
+uniform int STEPS :hint_range(0,100); //25
 
 uniform float EXPOSURE :hint_range(0.,1.);
 
@@ -248,10 +248,10 @@ vec3 render_sky_color(vec2 uv) {
 	}
 	
 	//I commented this out but it basically made the sky more saturated. It wasn't very good looking but you can tweak it.
-	//vec3 gray = vec3(dot(vec3(0.2126,0.7152,0.0722), color));
-	//vec3 colorfinal = clamp( vec3(mix(color, gray, -saturate)) , 0., 1.); //This makes the skybox more saturated (it looks a little wonky if you turn it up too high)
+	vec3 gray = vec3(dot(vec3(0.2126,0.7152,0.0722), color));
+	vec3 colorfinal = clamp( vec3(mix(color, gray, -saturate)) , 0., 1.); //This makes the skybox more saturated (it looks a little wonky if you turn it up too high)
 	
-	return color;
+	return colorfinal;
 }
 
 //Back to clouds shader

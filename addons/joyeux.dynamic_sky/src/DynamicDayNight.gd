@@ -4,6 +4,7 @@ extends WorldEnvironment
 onready var image : TextureRect = $Sky/Sprite
 onready var sky : Viewport = $Sky
 onready var sun : DirectionalLight = $DirectionalLight
+onready var sun_rays : Spatial = $DirectionalLight/GodRays
 export(bool) var cheap_shader = true
 export(Color) var sky_dome_color = Color(0.5, 0.5, 0.5, 1) setget set_dome_color, get_dome_color
 export(Color) var sky_horizon_color = Color(0.5, 0.5, 0.5, 1) setget set_horizon_color, get_horizon_color
@@ -12,6 +13,7 @@ export(Gradient) var horizongradient = null
 export(Gradient) var sungradient = null
 export(Gradient) var absorbtiongradient = null
 export(float, -10.0, 10.0) var wind_speed = 0.0 setget set_wind_speed, get_wind_speed
+export(Vector3) var wind_direction = Vector3(0, 0, 1) setget set_wind_direction, get_wind_direction
 export(int, 0, 100) var render_steps = 25 setget set_steps
 export(Vector3) var sun_positon = Vector3(0, 0, 0) setget set_sun_position, get_sun_position
 export(float) var time_update_tick = 1
@@ -35,6 +37,23 @@ var precipitation_probability = [
 	3, #October
 	1, #December 
 ]
+
+func set_wind_direction(v : Vector3) -> void :
+	wind_direction = v
+	wind_direction.normalize()
+	if not image:
+		return
+	else:
+		image.material.set("shader_param/WIND_VEC", wind_direction)
+
+func get_wind_direction() -> Vector3:
+	return wind_direction
+
+func set_cloud_exposure(ex : float) -> void :
+	if not image:
+		return
+	else:
+		image.material.set("shader_param/EXPOSURE", ex)
 
 
 func set_serialized_time(serialized_time) -> void:
@@ -87,6 +106,8 @@ func add_env_to_camera(camera: Camera) -> void:
 	yield(get_tree().create_timer(0.5), "timeout")
 	camera.environment.background_sky.radiance_size = 4
 
+#func _process(delta):
+#	sun_rays.set_clouds(sky.get_viewport().get_texture())
 
 func set_wind_speed(speed : float) -> void:
 	wind_speed = speed
@@ -187,6 +208,7 @@ func update_day_night(position : Vector3) -> void:
 	set_dome_color(skygradient.get_color(dome_idx))
 	set_horizon_color(horizongradient.get_color(horizon_idx))
 	set_sun_color(sungradient.get_color(sun_idx))
+	set_cloud_exposure(clamp(1.0 -absorbtiongradient.get_color(absorbtion_idx).r, 0.012, 0.98))
 	if not cheap_shader:
 		set_absorption(absorbtiongradient.get_color(absorbtion_idx).r)
 	else:

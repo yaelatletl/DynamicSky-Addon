@@ -9,7 +9,11 @@ uniform float THICKNESS :hint_range(0,100); //25.
 uniform float ABSORPTION :hint_range(0,10); //1.030725
 uniform float IMAGE_AMOUNT :hint_range(0,1); //1.030725
 uniform float WIND_SPEED :hint_range(0.0, 1.0, 0.1);
+uniform vec3 WIND_VEC = vec3(0.01, 0.00, 0.01); // :hint_range(0,100); //25
 uniform int STEPS :hint_range(0,100); //25
+
+uniform float EXPOSURE :hint_range(0.,1.);
+
 
 uniform vec4 SunColor : hint_color;
 uniform vec4 SkyDomeColor : hint_color;
@@ -120,6 +124,8 @@ vec4 render_clouds(vec3 ro,vec3 rd){
             if (length(pos) > 1e3) break;
         }
         
+        C *= EXPOSURE;
+
         return vec4(C, alpha);
     }
     return vec4(C, alpha);
@@ -185,7 +191,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord, in vec2 iResolution)
     {cld=render_clouds(ro,rd);
     cld=clamp(cld,vec4(0.),vec4(1.));
     cld.rgb+=0.04*cld.rgb*horizonPow;
-    cld*=clamp((  1.0 - exp(-2.3 * pow(max((0.0), horizonPow), (2.6)))),0.,1.);
+    //cld*=clamp((  1.0 - exp(-2.3 * pow(max((0.0), horizonPow), (2.6)))),0.,1.);
     }
 	else{
     cld.rgb = cube_bot(rd,vec3(1.5,1.49,1.71), vec3(1.1,1.15,1.5));
