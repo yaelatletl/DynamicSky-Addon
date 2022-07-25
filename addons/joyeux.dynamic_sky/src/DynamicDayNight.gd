@@ -12,6 +12,8 @@ export(Gradient) var skygradient = null
 export(Gradient) var horizongradient = null
 export(Gradient) var sungradient = null
 export(Gradient) var absorbtiongradient = null
+export(float, 0.0, 1.0, 0.001) var coverage = 0.5 setget set_coverage, get_coverage
+export(float, 0.0, 1.0, 0.001) var thickness = 0.5 setget set_thickness, get_thickness
 export(float, -10.0, 10.0) var wind_speed = 0.0 setget set_wind_speed, get_wind_speed
 export(Vector3) var wind_direction = Vector3(0, 0, 1) setget set_wind_direction, get_wind_direction
 export(int, 0, 100) var render_steps = 25 setget set_steps
@@ -22,6 +24,9 @@ export(float) var step_amount_per_tick = 1
 var hour : float = 0.0 
 var day : float = 1.0
 var month : float = 11.0
+
+const sky_cheap = preload("res://addons/joyeux.dynamic_sky/material/sky_coloured.tres")
+const sky_expensive = preload("res://addons/joyeux.dynamic_sky/material/sky_raleigh.tres")
 
 export(float) var precipitation_deviation : float = 1.0
 #Edit values in this array for rain probablility
@@ -39,8 +44,7 @@ var precipitation_probability = [
 ]
 
 func set_wind_direction(v : Vector3) -> void :
-	wind_direction = v
-	wind_direction.normalize()
+	wind_direction = v.normalized()
 	if not image:
 		return
 	else:
@@ -88,6 +92,11 @@ func _ready() -> void:
 	yield(get_tree().create_timer(0.1), "timeout")
 	retry_draw()
 	get_tree().create_timer(time_update_tick).connect("timeout", self, "next_time_tick")
+	if cheap_shader:
+		image.material = sky_cheap
+	else:
+		image.material = sky_expensive
+	image.material.set("shader_param/WIND_VEC", wind_direction)
 
 func retry_draw() -> void:
 	var Sky : ViewportTexture = ViewportTexture.new()
@@ -147,7 +156,12 @@ func get_horizon_color() -> Color:
 func set_coverage(value : float) -> void:
 	if not image:
 		return
-	image.material.set("shader_param/COVERAGE",float(value)/100)
+	image.material.set("shader_param/COVERAGE",float(value))
+
+func get_coverage() -> float:
+	if not image:
+		return 0.0
+	return image.material.get("shader_param/COVERAGE")
 
 func set_absorption(value: float) -> void:
 	if not image:
@@ -158,6 +172,11 @@ func set_thickness(value: float) -> void:
 	if not image:
 		return
 	image.material.set("shader_param/THICKNESS",value)
+
+func get_thickness() -> float:
+	if not image:
+		return 0.0
+	return image.material.get("shader_param/THICKNESS")
 
 func set_steps(value: int) -> void:
 	if not image:
@@ -205,12 +224,14 @@ func update_day_night(position : Vector3) -> void:
 	var absorbtion_idx = floor(position.y/absorbtion_increment)
 	absorbtion_idx = clamp(absorbtion_idx, 0, absorbtiongradient.get_point_count()-1)
 	
-	set_dome_color(skygradient.get_color(dome_idx))
-	set_horizon_color(horizongradient.get_color(horizon_idx))
-	set_sun_color(sungradient.get_color(sun_idx))
+	
 	set_cloud_exposure(clamp(1.0 -absorbtiongradient.get_color(absorbtion_idx).r, 0.012, 0.98))
+	
 	if not cheap_shader:
 		set_absorption(absorbtiongradient.get_color(absorbtion_idx).r)
 	else:
+		set_dome_color(skygradient.get_color(dome_idx))
+		set_horizon_color(horizongradient.get_color(horizon_idx))
+		set_sun_color(sungradient.get_color(sun_idx))
 		set_absorption(absorbtiongradient.get_color(absorbtion_idx).r*10)
 

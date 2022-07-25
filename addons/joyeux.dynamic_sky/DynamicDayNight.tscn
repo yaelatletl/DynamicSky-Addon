@@ -2,7 +2,7 @@
 
 [ext_resource path="res://addons/SIsilicon.vfx.godrays/GodRays.gd" type="Script" id=1]
 [ext_resource path="res://addons/joyeux.dynamic_sky/src/DynamicDayNight.gd" type="Script" id=2]
-[ext_resource path="res://addons/joyeux.dynamic_sky/material/DynamicSky.tres" type="Material" id=3]
+[ext_resource path="res://addons/joyeux.dynamic_sky/material/sky_coloured.tres" type="Material" id=3]
 
 [sub_resource type="ViewportTexture" id=29]
 flags = 4
@@ -53,8 +53,11 @@ skygradient = SubResource( 21 )
 horizongradient = SubResource( 23 )
 sungradient = SubResource( 25 )
 absorbtiongradient = SubResource( 27 )
-wind_speed = -0.152
-sun_positon = Vector3( -32.2348, -47.368, 52.3423 )
+coverage = 0.557
+thickness = 0.629
+wind_speed = 0.332
+wind_direction = Vector3( 0.707107, 0, 0.707107 )
+sun_positon = Vector3( 1.72774, -57.2697, 60 )
 time_update_tick = 0.091
 step_amount_per_tick = 1.332
 
@@ -72,7 +75,7 @@ margin_bottom = 2280.0
 texture = SubResource( 2 )
 
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
-transform = Transform( -0.839584, 0.323504, 0.436397, 0, 0.803339, -0.59552, -0.54323, -0.499989, -0.67447, 0, 0, 0 )
+transform = Transform( -0.999585, -0.0198696, -0.0208255, 0, 0.723515, -0.690305, 0.0287838, -0.690019, -0.723214, 0, 0, 0 )
 visible = false
 light_color = Color( 0, 0, 0, 1 )
 light_bake_mode = 0

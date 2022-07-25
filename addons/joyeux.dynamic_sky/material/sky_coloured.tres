@@ -1,0 +1,22 @@
+[gd_resource type="ShaderMaterial" load_steps=4 format=2]
+
+[ext_resource path="res://addons/joyeux.dynamic_sky/src/shaders/sky_clouds_cheap.shader" type="Shader" id=1]
+[ext_resource path="res://addons/joyeux.dynamic_sky/resource/noisetexture.tres" type="Texture" id=2]
+[ext_resource path="res://addons/joyeux.dynamic_sky/resource/night_sky.jpg" type="Texture" id=3]
+
+[resource]
+shader = ExtResource( 1 )
+shader_param/rotate_night_sky = null
+shader_param/COVERAGE = 0.557
+shader_param/THICKNESS = 0.629
+shader_param/ABSORPTION = 10.0
+shader_param/WIND_SPEED = 0.332
+shader_param/WIND_VEC = Vector3( 0.707107, 0, 0.707107 )
+shader_param/STEPS = 25
+shader_param/EXPOSURE = 0.012
+shader_param/SunColor = Color( 0, 0, 0, 1 )
+shader_param/SkyDomeColor = Color( 0.0168, 0.0156, 0.03, 1 )
+shader_param/SkyHorizonColor = Color( 0.0096, 0.0101067, 0.04, 1 )
+shader_param/direction = Vector3( 1.72774, -57.2697, 60 )
+shader_param/iChannel0 = ExtResource( 2 )
+shader_param/night_sky = ExtResource( 3 )

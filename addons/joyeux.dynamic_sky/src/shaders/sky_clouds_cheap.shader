@@ -1,13 +1,16 @@
 shader_type canvas_item;
 
 // USING https://www.shadertoy.com/view/XtBXDw (base on it)
+// Ported to Godot by Danil S
+// Optimization and cleanup by Yael Atletl
 
 uniform sampler2D iChannel0;
-uniform sampler2D night_sky;
+uniform sampler2D night_sky : hint_black_albedo;
+uniform mat3 rotate_night_sky;
+
 uniform float COVERAGE :hint_range(0,1); //0.5
 uniform float THICKNESS :hint_range(0,100); //25.
 uniform float ABSORPTION :hint_range(0,10); //1.030725
-uniform float IMAGE_AMOUNT :hint_range(0,1); //1.030725
 uniform float WIND_SPEED :hint_range(0.0, 1.0, 0.1);
 uniform vec3 WIND_VEC = vec3(0.01, 0.00, 0.01); // :hint_range(0,100); //25
 uniform int STEPS :hint_range(0,100); //25
@@ -46,8 +49,43 @@ float get_noise(vec3 x)
 	return fbm(x, FBM_FREQ);
 }
 
-vec3 render_sky_color(vec3 rd){
+vec3 ray_dir_from_uv(vec2 uv) {
+	float PI = 3.14159265358979;
+	vec3 dir;
 	
+	float x = sin(PI * uv.y);
+	dir.y = cos(PI * uv.y);
+	
+	dir.x = x * sin(2.0 * PI * (0.5 - uv.x));
+	dir.z = x * cos(2.0 * PI * (0.5 - uv.x));
+	
+	return dir;
+}
+vec2 uv_from_ray_dir(vec3 dir) {
+	float PI = 3.14159265358979;
+	vec2 uv;
+	
+	uv.y = acos(dir.y) / PI;
+	
+	dir.y = 0.0;
+	dir = normalize(dir);
+	uv.x = acos(dir.z) / (2.0 * PI);
+	if (dir.x < 0.0) {
+		uv.x = 1.0 - uv.x;
+	}
+	uv.x = 0.5 - uv.x;
+	if (uv.x < 0.0) {
+		uv.x += 1.0;
+	}
+	
+	return uv;
+}
+
+vec3 render_sky_color(vec3 rd, vec2 uv2){
+	vec2 uv = vec2(1.-rd.x,1.-rd.y);
+	
+	vec3 dir = ray_dir_from_uv(uv);
+
 	vec3 sun_color = SunColor.rgb;
 	//vec3 sun_color = vec3(1., .7, .55);
 	//vec3 SUN_DIR = normalize(vec3(0, abs(sin( .3)), -1));
@@ -59,8 +97,20 @@ vec3 render_sky_color(vec3 rd){
 	sky = sky + sun_color * min(pow(sun_amount, 1500.0) * 5.0, 1.0);
 	sky = sky + sun_color * min(pow(sun_amount, 10.0) * .6, 1.0);
 
-	return sky;
+    // Mix in night sky (already sRGB)
+	if (dir.y > 0.0) {
+		float f = (0.21 * sky.r) + (0.72 * sky.g) + (0.07 * sky.b);
+		float cutoff = 0.1;
+		sky += texture(night_sky, uv2).rgb * clamp((cutoff - f) / cutoff, 0.0, 1.0);
+	}
+	
+	//I commented this out but it basically made the sky more saturated. It wasn't very good looking but you can tweak it.
+	vec3 gray = vec3(dot(vec3(0.2126,0.7152,0.0722), sky));
+	vec3 colorfinal = clamp( vec3(mix(sky, gray, -0.5)) , 0., 1.); //This makes the skybox more saturated (it looks a little wonky if you turn it up too high)
+	
+	return colorfinal;
 }
+
 
 bool SphereIntersect(vec3 SpPos, float SpRad, vec3 ro, vec3 rd, out float t, out vec3 norm) {
     ro -= SpPos;
@@ -99,7 +149,8 @@ vec4 render_clouds(vec3 ro,vec3 rd){
 	
 	vec3 apos=vec3(0, -450, 0);
 	float arad=500.;
-	vec3 WIND=vec3(0, 0, -WIND_SPEED*TIME * .2);
+	vec3 WIND = normalize(WIND_VEC);
+	WIND *= WIND_SPEED * TIME;
     vec3 C = vec3(0, 0, 0);
 	float alpha = 0.;
     vec3 n;
@@ -181,27 +232,21 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord, in vec2 iResolution)
     vec3 col=vec3(0.);
 
     panorama_uv(fragCoord,ro,rd,iResolution);
+
     vec2 uv = fragCoord/iResolution;
-	vec3 image = texture(night_sky, vec2(uv.x, 1.0-uv.y)).rgb;
-    vec3 sky = mix(render_sky_color(rd), image, IMAGE_AMOUNT);
+	uv = vec2(1.-uv.x, 1.-uv.y);
+    vec3 sky = render_sky_color(rd, uv);
     vec4 cld = vec4(0.);
 	float skyPow = dot(rd, vec3(0.0, -1.0, 0.0));
     float horizonPow =1.2-pow(1.0-abs(skyPow), 5.0);
-    if(rd.y>0.)
-    {cld=render_clouds(ro,rd);
-    cld=clamp(cld,vec4(0.),vec4(1.));
-    cld.rgb+=0.04*cld.rgb*horizonPow;
-    //cld*=clamp((  1.0 - exp(-2.3 * pow(max((0.0), horizonPow), (2.6)))),0.,1.);
+    if(rd.y>0.){
+        cld=render_clouds(ro,rd);
+        cld=clamp(cld,vec4(0.),vec4(1.));
+        cld.rgb+=0.04*cld.rgb*horizonPow;
+        //cld*=clamp((  1.0 - exp(-2.3 * pow(max((0.0), horizonPow), (2.6)))),0.,1.);
     }
-	else{
-    cld.rgb = cube_bot(rd,vec3(1.5,1.49,1.71), vec3(1.1,1.15,1.5));
-    cld*=cld;
-    //cld=clamp(cld,vec4(0.),vec4(1.));
-    cld.a=1.;
-    cld*=clamp((  1.0 - exp(-1.3 * pow(max((0.0), horizonPow), (2.6)))),0.,1.);
-    }
+
     col=mix(sky, cld.rgb/(0.0001+cld.a), cld.a);
-	//col*=col;
     fragColor = vec4(col,1.0);
 
 }

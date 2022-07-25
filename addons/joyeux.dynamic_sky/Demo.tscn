@@ -1,15 +1,16 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://addons/joyeux.dynamic_sky/DynamicDayNight_Cheap.tscn" type="PackedScene" id=1]
-[ext_resource path="res://addons/joyeux.dynamic_sky/CameraDemo.gd" type="Script" id=2]
+[ext_resource path="res://addons/joyeux.dynamic_sky/DynamicDayNight.tscn" type="PackedScene" id=1]
+[ext_resource path="res://addons/joyeux.dynamic_sky/src/other_scripts/CameraDemo.gd" type="Script" id=2]
 
 [node name="Spatial" type="Spatial"]
 
 [node name="DynamicDayNight" parent="." instance=ExtResource( 1 )]
-sky_dome_color = Color( 0.5, 0.825, 1, 1 )
-sky_horizon_color = Color( 0.26342, 0.425437, 0.534118, 1 )
-sun_positon = Vector3( 20.561, 53.4795, 17.7054 )
-precipitation_deviation = 1.0
+cheap_shader = true
+coverage = 0.734
+thickness = 0.605
+wind_direction = Vector3( 0.707107, 0, 0.707107 )
+sun_positon = Vector3( -38.5075, -42.4262, 25.8436 )
 
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.925554, 2.25376 )

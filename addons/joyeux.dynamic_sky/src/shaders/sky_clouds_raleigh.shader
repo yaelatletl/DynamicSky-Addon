@@ -1,11 +1,15 @@
 shader_type canvas_item;
 
 // Shader combined from two other shaders by Leo Gallatin
+// Optimization and cleanup by Yael Atletl
 
 //clouds
 // USING https://www.shadertoy.com/view/XtBXDw (based on it)
-// Transfered to Godot by Danil S
+// Ported to Godot by Danil S
 uniform sampler2D iChannel0;
+uniform sampler2D night_sky : hint_black_albedo;
+uniform mat3 rotate_night_sky;
+
 uniform float COVERAGE :hint_range(0,1); //0.5
 uniform float THICKNESS :hint_range(0,100); //25.
 uniform float ABSORPTION :hint_range(0,10); //1.030725
@@ -17,7 +21,7 @@ uniform float EXPOSURE :hint_range(0.,1.);
 
 //sky
 // Atmosphere code from: https://github.com/wwwtyro/glsl-atmosphere
-// Transferred to Godot by Bastiaan Olij
+// Ported to Godot by Bastiaan Olij
 uniform float saturate = 0.3;
 
 uniform float earth_radius_km = 6371;
@@ -31,8 +35,7 @@ uniform float rayleigh_scale = 800;
 uniform float mie_scale = 120;
 uniform float mie_scatter_dir = 0.758;
 
-uniform sampler2D night_sky : hint_black_albedo;
-uniform mat3 rotate_night_sky;
+
 
 float noise( in vec3 x )
 {
@@ -60,20 +63,6 @@ float get_noise(vec3 x)
 	return fbm(x, FBM_FREQ);
 }
 
-// This is the original sky color script for the clouds shader
-/*vec3 render_sky_color(vec3 rd){
-	vec3 sun_color = vec3(1., .7, .55);
-	vec3 SUN_DIR = normalize(vec3(0, abs(sin( .8)), -1));
-	float sun_amount = max(dot(rd, SUN_DIR), 0.0);
-
-	vec3  sky = mix(vec3(.0, .1, .4), vec3(.3, .6, .8), 1.0 - rd.y);
-	sky = sky + sun_color * min(pow(sun_amount, 1500.0) * 5.0, 1.0);
-	sky = sky + sun_color * min(pow(sun_amount, 10.0) * .6, 1.0);
-
-	return sky;
-}*/
-
-// sky shader interjection
 
 vec3 ray_dir_from_uv(vec2 uv) {
 	float PI = 3.14159265358979;
@@ -292,7 +281,8 @@ vec4 render_clouds(vec3 ro,vec3 rd){
 	
 	vec3 apos=vec3(0, -450, 0);
 	float arad=500.;
-	vec3 WIND=vec3( TIME * (WIND_VEC.x * WIND_SPEED) , TIME * (WIND_VEC.y * WIND_SPEED), TIME * (WIND_VEC.z * WIND_SPEED));
+	vec3 WIND = normalize(WIND_VEC);
+	WIND *= WIND_SPEED * TIME;
     vec3 C = vec3(0, 0, 0);
 	float alpha = 0.;
     vec3 n;
@@ -369,7 +359,6 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord, in vec2 iResolution, vec2
     panorama_uv(fragCoord,ro,rd,iResolution);
     
     vec3 sky = render_sky_color(uv); //for sky is gradient
-	//vec3 sky = vec3(0.); //for sky is black
     vec4 cld = vec4(0.);
 	float skyPow = dot(rd, vec3(0.0, -1.0, 0.0));
     float horizonPow =1.-pow(1.0-abs(skyPow), 5.0);
@@ -380,11 +369,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord, in vec2 iResolution, vec2
 		//cld*=clamp((  1.0 - exp(-2.3 * pow(max((0.0), horizonPow), (2.6)))),0.,1.); //This makes the clouds fade away at the horizon, I didn't like it
 	}
     col=mix(sky, cld.rgb/(0.0001+cld.a), cld.a);
-	//col=mix(col, vec3(0.), EXPOSURE); // I don't know what this actually does but it makes the sky black during the day
-	//col*=col; //This also breaks the sky entirely
     fragColor = vec4(col, 1.0);
-	
-	//fragColor = vec4(sky, 1.); //This makes it so only the sky renders
 	
 }
 
