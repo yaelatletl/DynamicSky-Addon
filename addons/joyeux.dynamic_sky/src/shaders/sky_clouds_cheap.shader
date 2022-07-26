@@ -87,8 +87,6 @@ vec3 render_sky_color(vec3 rd, vec2 uv2){
 	vec3 dir = ray_dir_from_uv(uv);
 
 	vec3 sun_color = SunColor.rgb;
-	//vec3 sun_color = vec3(1., .7, .55);
-	//vec3 SUN_DIR = normalize(vec3(0, abs(sin( .3)), -1));
 	vec3 SUN_DIR = normalize(direction);
 	float sun_amount = max(dot(rd, SUN_DIR), 0.0);
 
@@ -98,11 +96,7 @@ vec3 render_sky_color(vec3 rd, vec2 uv2){
 	sky = sky + sun_color * min(pow(sun_amount, 10.0) * .6, 1.0);
 
     // Mix in night sky (already sRGB)
-	if (dir.y > 0.0) {
-		float f = (0.21 * sky.r) + (0.72 * sky.g) + (0.07 * sky.b);
-		float cutoff = 0.1;
-		sky += texture(night_sky, uv2).rgb * clamp((cutoff - f) / cutoff, 0.0, 1.0);
-	}
+	sky += texture(night_sky, uv2).rgb*clamp(0.5-SUN_DIR.y, 0., 1.);// * clamp((cutoff - f) / cutoff, 0.0, 1.0);
 	
 	//I commented this out but it basically made the sky more saturated. It wasn't very good looking but you can tweak it.
 	vec3 gray = vec3(dot(vec3(0.2126,0.7152,0.0722), sky));
@@ -131,7 +125,6 @@ bool SphereIntersect(vec3 SpPos, float SpRad, vec3 ro, vec3 rd, out float t, out
     if (t1 < 0.0) return false;
     norm = ro+t1*rd;
     t = t1;
-    //norm = normalize(norm);
     return true;
 }
 

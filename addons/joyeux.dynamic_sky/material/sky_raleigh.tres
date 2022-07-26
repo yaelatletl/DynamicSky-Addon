@@ -7,18 +7,18 @@
 [resource]
 shader = ExtResource( 3 )
 shader_param/rotate_night_sky = null
-shader_param/COVERAGE = 0.548
-shader_param/THICKNESS = 0.726
-shader_param/ABSORPTION = 10.0
+shader_param/COVERAGE = 0.532
+shader_param/THICKNESS = 0.766
+shader_param/ABSORPTION = 0.951429
 shader_param/WIND_SPEED = 0.332
 shader_param/WIND_VEC = Vector3( 0.707107, 0, 0.707107 )
 shader_param/STEPS = 25
-shader_param/EXPOSURE = 0.012
+shader_param/EXPOSURE = 0.904857
 shader_param/saturate = 0.3
 shader_param/earth_radius_km = 6371.0
 shader_param/atmo_radius_km = 6471.0
 shader_param/cam_height_m = 1.8
-shader_param/direction = Vector3( 11.6365, -56.1017, -60 )
+shader_param/direction = Vector3( 53.132, 21.443, 0 )
 shader_param/sun_intensity = 20.0
 shader_param/rayleigh_coeff = Vector3( 5.5, 13, 22.4 )
 shader_param/mie_coeff = 21.0

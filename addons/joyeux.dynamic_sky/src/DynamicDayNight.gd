@@ -227,11 +227,8 @@ func update_day_night(position : Vector3) -> void:
 	
 	set_cloud_exposure(clamp(1.0 -absorbtiongradient.get_color(absorbtion_idx).r, 0.012, 0.98))
 	
-	if not cheap_shader:
-		set_absorption(absorbtiongradient.get_color(absorbtion_idx).r)
-	else:
+	set_absorption(absorbtiongradient.get_color(absorbtion_idx).r*10)
+	if cheap_shader:
 		set_dome_color(skygradient.get_color(dome_idx))
 		set_horizon_color(horizongradient.get_color(horizon_idx))
 		set_sun_color(sungradient.get_color(sun_idx))
-		set_absorption(absorbtiongradient.get_color(absorbtion_idx).r*10)
-

@@ -208,6 +208,7 @@ vec3 render_sky_color(vec2 uv) {
 	uv = vec2(1.-uv.x,1.-uv.y);
 	
 	vec3 dir = ray_dir_from_uv(uv);
+	vec3 sun_dir = normalize(direction);
 	
 	// determine our sky color
 	vec3 color = atmosphere(
@@ -225,16 +226,11 @@ vec3 render_sky_color(vec2 uv) {
 	);
 	
 	// Apply exposure.
-	color = 1.0 - exp(-1.0 * color); //Makes night sky too bright and gross looking...
+	color = 1.0 - exp(-1.0 * color);
 	
 	// Mix in night sky (already sRGB)
-	if (dir.y > 0.0) {
-		float f = (0.21 * color.r) + (0.72 * color.g) + (0.07 * color.b);
-		float cutoff = 0.1;
-		
-		vec2 ns_uv = uv_from_ray_dir(rotate_night_sky * dir);
-		color += texture(night_sky, ns_uv).rgb * clamp((cutoff - f) / cutoff, 0.0, 1.0);
-	}
+	color += texture(night_sky, uv).rgb * clamp(0.5-sun_dir.y, 0., 1.);
+	//Old code here didn't actually draw any night sky. Now it does.
 	
 	//I commented this out but it basically made the sky more saturated. It wasn't very good looking but you can tweak it.
 	vec3 gray = vec3(dot(vec3(0.2126,0.7152,0.0722), color));
@@ -264,7 +260,6 @@ bool SphereIntersect(vec3 SpPos, float SpRad, vec3 ro, vec3 rd, out float t, out
     if (t1 < 0.0) return false;
     norm = ro+t1*rd;
     t = t1;
-    //norm = normalize(norm);
     return true;
 }
 
@@ -361,7 +356,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord, in vec2 iResolution, vec2
     vec3 sky = render_sky_color(uv); //for sky is gradient
     vec4 cld = vec4(0.);
 	float skyPow = dot(rd, vec3(0.0, -1.0, 0.0));
-    float horizonPow =1.-pow(1.0-abs(skyPow), 5.0);
+    float horizonPow =1.2-pow(1.0-abs(skyPow), 5.0);
     if(rd.y>0.){
 		cld=render_clouds(ro,rd);
 		cld=clamp(cld,vec4(0.),vec4(1.));
