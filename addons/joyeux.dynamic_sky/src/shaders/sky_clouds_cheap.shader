@@ -237,7 +237,8 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord, in vec2 iResolution)
         cld=clamp(cld,vec4(0.),vec4(1.));
         cld.rgb+=0.04*cld.rgb*horizonPow;
         //cld*=clamp((  1.0 - exp(-2.3 * pow(max((0.0), horizonPow), (2.6)))),0.,1.);
-    }
+		//horizon fade for clouds
+	}
 
     col=mix(sky, cld.rgb/(0.0001+cld.a), cld.a);
     fragColor = vec4(col,1.0);

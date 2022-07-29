@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/night_sky.jpg-64507359ca6576713de7a50cb6205dc9.stex"
+path="res://.import/stars_big.png-611a04fcca57071cf7d42cddbbdceddc.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/joyeux.dynamic_sky/resource/night_sky.jpg"
-dest_files=[ "res://.import/night_sky.jpg-64507359ca6576713de7a50cb6205dc9.stex" ]
+source_file="res://addons/joyeux.dynamic_sky/resource/stars_big.png"
+dest_files=[ "res://.import/stars_big.png-611a04fcca57071cf7d42cddbbdceddc.stex" ]
 
 [params]
 

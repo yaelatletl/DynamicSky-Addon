@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" load_steps=4 format=2]
 
-[ext_resource path="res://addons/joyeux.dynamic_sky/resource/night_sky.jpg" type="Texture" id=1]
+[ext_resource path="res://addons/joyeux.dynamic_sky/resource/stars_big.png" type="Texture" id=1]
 [ext_resource path="res://addons/joyeux.dynamic_sky/resource/noisetexture.tres" type="Texture" id=2]
 [ext_resource path="res://addons/joyeux.dynamic_sky/src/shaders/sky_clouds_raleigh.shader" type="Shader" id=3]
 
@@ -9,16 +9,16 @@ shader = ExtResource( 3 )
 shader_param/rotate_night_sky = null
 shader_param/COVERAGE = 0.532
 shader_param/THICKNESS = 0.766
-shader_param/ABSORPTION = 0.951429
+shader_param/ABSORPTION = 0.390625
 shader_param/WIND_SPEED = 0.332
 shader_param/WIND_VEC = Vector3( 0.707107, 0, 0.707107 )
 shader_param/STEPS = 25
-shader_param/EXPOSURE = 0.904857
+shader_param/EXPOSURE = 0.960938
 shader_param/saturate = 0.3
 shader_param/earth_radius_km = 6371.0
 shader_param/atmo_radius_km = 6471.0
 shader_param/cam_height_m = 1.8
-shader_param/direction = Vector3( 53.132, 21.443, 0 )
+shader_param/direction = Vector3( 19.6621, 53.8164, 0 )
 shader_param/sun_intensity = 20.0
 shader_param/rayleigh_coeff = Vector3( 5.5, 13, 22.4 )
 shader_param/mie_coeff = 21.0
