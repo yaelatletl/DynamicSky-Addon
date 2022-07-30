@@ -7,10 +7,11 @@
 
 [node name="DynamicDayNight" parent="." instance=ExtResource( 1 )]
 cheap_shader = true
-coverage = 0.734
-thickness = 0.605
+sky_horizon_color = Color( 0, 0, 0, 0 )
+coverage = 0.0
+thickness = 0.0
 wind_direction = Vector3( 0.707107, 0, 0.707107 )
-sun_positon = Vector3( -38.5075, -42.4262, 25.8436 )
+sun_positon = Vector3( -30.2586, 48.6541, 28.334 )
 
 [node name="Camera" type="Camera" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.925554, 2.25376 )

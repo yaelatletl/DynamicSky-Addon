@@ -35,13 +35,26 @@ var precipitation_probability = [
 	8, #February
 	12, #March
 	5, #April
+	8, #May
 	3, #June
 	20, #July
 	10, #August
 	23, #September
 	3, #October
+	2, #November
 	1, #December 
 ]
+
+func make_it_rain():
+	#Based on probablility, make it rain
+	var will_rain = rand_range(0, 100) < precipitation_probability[month-1]
+	if will_rain:
+		#Call the rain function here
+		pass
+	else:
+		#Call the stop rain function here
+		pass
+
 
 func set_wind_direction(v : Vector3) -> void :
 	wind_direction = v.normalized()
@@ -90,6 +103,7 @@ func get_sun_position() -> Vector3:
 
 func _ready() -> void:
 	yield(get_tree().create_timer(0.1), "timeout")
+	randomize()
 	retry_draw()
 	get_tree().create_timer(time_update_tick).connect("timeout", self, "next_time_tick")
 	if cheap_shader:
@@ -190,12 +204,13 @@ func next_time_tick() -> void:
 	if hour >= 24:
 		hour = 0
 		day += 1
+		make_it_rain()
 	if day > 30:
 		day = 1
 		month += 1
 	if month > 12:
 		month = 1
-	var new_time = vector_from_time(hour, day, month)
+	var new_time = vector_from_time(hour-8, day, month)
 	set_sun_position(new_time)
 	update_day_night(new_time)
 	get_tree().create_timer(time_update_tick).connect("timeout", self, "next_time_tick")
@@ -225,7 +240,7 @@ func update_day_night(position : Vector3) -> void:
 	absorbtion_idx = clamp(absorbtion_idx, 0, absorbtiongradient.get_point_count()-1)
 	
 	
-	set_cloud_exposure(clamp(1.0 -absorbtiongradient.get_color(absorbtion_idx).r, 0.012, 0.98))
+	set_cloud_exposure(clamp(1.0 -absorbtiongradient.get_color(absorbtion_idx).r, 0.12, 0.98))
 	
 	set_absorption(absorbtiongradient.get_color(absorbtion_idx).r*10)
 	if cheap_shader:
