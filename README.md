@@ -10,4 +10,14 @@ There's also a climate manager based on months, if you wish to change precipitat
 ## How does it work?
 This is a plug and play addon, simply add `res://addons/joyeux.dynamic_sky/DynamicDayNight.tscn` to your scene and the cycle will start playing. For proper setup, cameras using this sky should call `add_env_to_camera` to register themselves and see the sky properly. Otherwise you will notice that only the light shows up, though you may intend to use it like that, it looks pretty.
 
+There are export variables for you to change, though most of them are only used for testing purposes as the night-day cycle will change the values on the run. 
 
+## How does it look?
+
+This is how the "Cheap" version looks like (Sky colours can be changed to whatever you like, so this is also the stylished version).
+
+![Cheap shader](readme/Simple_stylish.png)
+
+This is how the raleigh version looks like, to change how it looks you have to modify the shader. (None of the atmosphere variables are exposed in GDScript).
+
+![Raleigh shader](readme/Raleigh.png)
