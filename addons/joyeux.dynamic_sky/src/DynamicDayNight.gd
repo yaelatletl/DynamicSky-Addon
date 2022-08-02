@@ -5,6 +5,7 @@ onready var image : TextureRect = $Sky/Sprite
 onready var sky : Viewport = $Sky
 onready var sun : DirectionalLight = $DirectionalLight
 onready var sun_rays : Spatial = $DirectionalLight/GodRays
+export(int) var initial_time_serialized : int = 0
 export(bool) var cheap_shader = true
 export(Color) var sky_dome_color = Color(0.5, 0.5, 0.5, 1) setget set_dome_color, get_dome_color
 export(Color) var sky_horizon_color = Color(0.5, 0.5, 0.5, 1) setget set_horizon_color, get_horizon_color
@@ -73,13 +74,11 @@ func set_cloud_exposure(ex : float) -> void :
 		image.material.set("shader_param/EXPOSURE", ex)
 
 
-func set_serialized_time(serialized_time) -> void:
-	hour = 110000
-	day = 001100
-	month = 000011
-	hour &= serialized_time
-	day &= serialized_time
-	month &= serialized_time
+func set_serialized_time(serialized_time : int) -> void:
+	hour = floor(serialized_time / 10000)
+	day = floor((serialized_time - hour * 10000) /100)
+	month = (serialized_time - hour * 10000 - day * 100) / 1
+	print("Time set to: " + str(hour) + ":" + str(day) + ":" + str(month))
 
 func set_sun_position(pos : Vector3) -> void:
 	if not cheap_shader:
@@ -102,14 +101,16 @@ func get_sun_position() -> Vector3:
 	return sun_positon
 
 func _ready() -> void:
+	EnvironmentBlender.register_main_env(self)
 	yield(get_tree().create_timer(0.1), "timeout")
 	randomize()
-	retry_draw()
+	set_serialized_time(initial_time_serialized)
 	get_tree().create_timer(time_update_tick).connect("timeout", self, "next_time_tick")
 	if cheap_shader:
 		image.material = sky_cheap
 	else:
 		image.material = sky_expensive
+	retry_draw()
 	image.material.set("shader_param/WIND_VEC", wind_direction)
 
 func retry_draw() -> void:
@@ -117,12 +118,12 @@ func retry_draw() -> void:
 	Sky.resource_local_to_scene = true
 	Sky.viewport_path = "Sky"
 	Sky.flags = Texture.FLAG_FILTER
-	environment.background_sky.radiance_size = 3
 	environment.background_sky.panorama = Sky
+	environment.background_sky.radiance_size = 3
 
 func add_env_to_camera(camera: Camera) -> void:
-	var image_texture=sky.get_viewport().get_texture()
-	camera.environment=load("res://addons/joyeux.dynamic_sky/material/DynamicEnv.tres") as Environment
+	var image_texture = sky.get_viewport().get_texture()
+	camera.environment = load("res://addons/joyeux.dynamic_sky/material/DynamicEnv.tres") as Environment
 	camera.environment.background_sky.set_panorama(image_texture)
 	yield(get_tree().create_timer(0.5), "timeout")
 	camera.environment.background_sky.radiance_size = 3
@@ -243,7 +244,8 @@ func update_day_night(position : Vector3) -> void:
 	set_cloud_exposure(clamp(1.0 -absorbtiongradient.get_color(absorbtion_idx).r, 0.12, 0.98))
 	
 	set_absorption(absorbtiongradient.get_color(absorbtion_idx).r*10)
+	set_sun_color(sungradient.get_color(sun_idx))
+	
 	if cheap_shader:
 		set_dome_color(skygradient.get_color(dome_idx))
 		set_horizon_color(horizongradient.get_color(horizon_idx))
-		set_sun_color(sungradient.get_color(sun_idx))
