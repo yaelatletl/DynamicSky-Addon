@@ -116,7 +116,7 @@ func _ready() -> void:
 func retry_draw() -> void:
 	var Sky : ViewportTexture = ViewportTexture.new()
 	Sky.resource_local_to_scene = true
-	Sky.viewport_path = "Sky"
+	Sky.viewport_path = $Sky.get_path()
 	Sky.flags = Texture.FLAG_FILTER
 	environment.background_sky.panorama = Sky
 	environment.background_sky.radiance_size = 3
