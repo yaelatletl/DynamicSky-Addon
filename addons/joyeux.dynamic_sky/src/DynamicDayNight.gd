@@ -101,7 +101,6 @@ func get_sun_position() -> Vector3:
 	return sun_positon
 
 func _ready() -> void:
-	EnvironmentBlender.register_main_env(self)
 	yield(get_tree().create_timer(0.1), "timeout")
 	randomize()
 	set_serialized_time(initial_time_serialized)
